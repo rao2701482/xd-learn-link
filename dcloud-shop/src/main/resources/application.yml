@@ -1,0 +1,24 @@
+server:
+  port: 8004
+
+
+#应用名称
+spring:
+  application:
+    name: dcloud-shop
+
+#服务注册发现
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 120.79.150.146:8848
+        username: nacos
+        password: nacos
+
+
+
+#配置plus打印sql日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
