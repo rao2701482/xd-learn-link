@@ -3,11 +3,10 @@ package net.xdclass.component;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.config.SmsConfig;
+import net.xdclass.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +17,7 @@ public class SmsComponent {
     /**
      * 发送地址
      */
-    private static final String URL_TEMPLATE = "http://jmsms.market.alicloudapi.com/sms/send?mobile=%s&templateId=%s&value=%s";
+    private static final String URL_TEMPLATE = "https://jmsms.market.alicloudapi.com/sms/send?mobile=%s&templateId=%s&value=%s";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -26,26 +25,26 @@ public class SmsComponent {
     @Autowired
     private SmsConfig smsConfig;
 
-    public void send(String to, String templateId, String value) {
-        String url = String.format(URL_TEMPLATE, to, templateId, value);
+    @Async("threadPoolTaskExecutor")
+    public void send(String to,String templateId,String value){
+
+        long beginTime = CommonUtil.getCurrentTimestamp();
+
+        String url = String.format(URL_TEMPLATE,to,templateId,value);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization","APPCODE "+smsConfig.getAppCode());
-        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-        HttpEntity entity = new HttpEntity(headers);
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        headers.set("Authorization","APPCODE "+smsConfig.getAppCode());
+        HttpEntity entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        //        restTemplate.postForObject(url, entity, String.class);
-//        ResponseEntity<String> response = restTemplate.postForObject(url, entity, String.class);
+        long endTime = CommonUtil.getCurrentTimestamp();
 
-
-        log.info("url = {}, body = {}", url, response.getBody());
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("发送短信验证成功");
-        } else {
-            log.error("发送短信验证码失败:{}", response.getBody());
+        log.info("耗时={},url={},body={}",endTime-beginTime,url,response.getBody());
+        if(response.getStatusCode().is2xxSuccessful()){
+            log.info("发送短信验证码成功");
+        }else {
+            log.error("发送短信验证码失败:{}",response.getBody());
         }
 
     }
-
 }
