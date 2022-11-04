@@ -47,3 +47,10 @@ sms:
   app-code: fed2556097d14ee896c9351864275dd3
   # 使用哪一个模板进行发送数据
   template-id: M72CB42894
+
+aliyun:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5t84vZUn7x81Eob3UwR5
+    access-key-secret: 5bMhe1n8fM41VlMj7JrjW3OYFn3sNS
+    bucketname: bitdeer-ryan
