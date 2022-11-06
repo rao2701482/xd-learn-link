@@ -49,6 +49,11 @@ public class NotifyController {
      */
     private static final long CAPTCHA_CODE_EXPIRED = 1000 * 10 *  60;
 
+    /**
+     * 获取验证码
+     * @param request
+     * @param response
+     */
     @GetMapping("/captcha")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response) {
 

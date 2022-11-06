@@ -8,12 +8,16 @@ import net.xdclass.config.OSSConfig;
 import net.xdclass.service.FileService;
 import net.xdclass.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+
+
 
 /**
  * 小滴课堂,愿景：让技术不再难学
@@ -26,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
+@EnableConfigurationProperties
 public class FileServiceImpl implements FileService {
 
     @Autowired

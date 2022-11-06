@@ -56,18 +56,6 @@ public class NotifyServiceImpl implements NotifyService {
         // [防止验证码短时间内重复发送]: 发送验证码前, 得防止同一个号码在1min内被重复发送, 且发送内容的有效期为10min
         String cacheKey = String.format(RedisKey.CHECK_CODE_KEY, sendCodeEnum.name(), to);
 
-//        String cacheValue = redisTemplate.opsForValue().get(cacheKey);
-//        //如果不为空，再判断是否60秒内重复发送 0122_232131321314132
-//        if (StringUtils.isNotBlank(cacheValue)) {
-//            long ttl = Long.parseLong(cacheValue.split("_")[1]);
-//            //当前时间戳-验证码发送的时间戳，如果小于60秒，则不给重复发送
-//            long leftTime = CommonUtil.getCurrentTimestamp() - ttl;
-//            if (leftTime < (1000 * 60)) {
-//                log.info("重复发送短信验证码，时间间隔:{}秒",leftTime);
-//                return JsonData.buildResult(BizCodeEnum.CODE_LIMITED);
-//            }
-//        }
-
         String code = CommonUtil.getRandomCode(6);
         //生成拼接好验证码
         String value = code + "_" + CommonUtil.getCurrentTimestamp();
@@ -79,9 +67,30 @@ public class NotifyServiceImpl implements NotifyService {
         }else if(CheckUtil.isPhone(to)){
 
             //发送手机验证码
-            smsComponent.send(to,smsConfig.getTemplateId(),code);
+//            smsComponent.send(to,smsConfig.getTemplateId(),code);
+            log.info("假装发送了验证码 {}",code);
         }
         return JsonData.buildSuccess();
 
     }
+
+    @Override
+    public boolean checkCode(SendCodeEnum sendCodeEnum, String to, String code) {
+
+        String cacheKey = String.format(RedisKey.CHECK_CODE_KEY, SendCodeEnum.USER_REGISTER.name(), to);
+
+        String cacheValue = redisTemplate.opsForValue().get(cacheKey);
+
+        if (StringUtils.isNotBlank(cacheValue)) {
+            String cacheCode = cacheValue.split("_")[0];
+            if (cacheCode.equalsIgnoreCase(code)) {
+                redisTemplate.delete(cacheKey);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }
