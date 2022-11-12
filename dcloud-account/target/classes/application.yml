@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8001
 
 spring:
   application:
@@ -33,7 +33,6 @@ spring:
   shardingsphere:
     datasource:
       #数据源名称
-      names: ds0
       ds0:
         connectionTimeoutMilliseconds: 30000
         driver-class-name: com.mysql.cj.jdbc.Driver
@@ -44,8 +43,9 @@ spring:
         maxPoolSize: 50
         minPoolSize: 50
         type: com.zaxxer.hikari.HikariDataSource
-        username: root1
+        username: root
         password: Aa18760120328
+      names: ds0
 
     props:
       # 打印执行的数据库以及语句
