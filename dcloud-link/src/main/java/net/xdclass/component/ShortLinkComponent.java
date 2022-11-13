@@ -1,5 +1,7 @@
 package net.xdclass.component;
 
+import net.xdclass.strategy.ShardingDBConfig;
+import net.xdclass.strategy.ShardingTableConfig;
 import net.xdclass.util.CommonUtil;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,9 @@ public class ShortLinkComponent {
         //进制转换
         String code = encodeToBase62(murmurhash);
 
-        return code;
+        String shortLinkCode = ShardingDBConfig.getRandomDBPrefix() + code + ShardingTableConfig.getRandomTableSuffix();
+
+        return shortLinkCode;
     }
 
     /**

@@ -4,6 +4,8 @@ import com.google.common.hash.Hashing;
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.LinkApplication;
 import net.xdclass.component.ShortLinkComponent;
+import net.xdclass.manager.ShortLinkManager;
+import net.xdclass.model.ShortLinkDO;
 import net.xdclass.util.CommonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +52,40 @@ public class ShortLinkTest {
             String shortLinkCode = shortLinkComponent.createShortLinkCode(originalUrl);
             log.info("originalUrl:" + originalUrl + ", shortLinkCode=" + shortLinkCode);
         }
+    }
+
+    @Autowired
+    private ShortLinkManager shortLinkManager;
+
+    @Test
+    public void testSaveShortLink() {
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            int num1 = random.nextInt(10);
+            int num2 = random.nextInt(100000000);
+            int num3 = random.nextInt(100000000);
+            String originalUrl = num1 + "xdclass" + num2 + ".net" + num3;
+            String shortLinkCode = shortLinkComponent.createShortLinkCode(originalUrl);
+
+            ShortLinkDO shortLinkDO = new ShortLinkDO();
+            shortLinkDO.setCode(shortLinkCode);
+            shortLinkDO.setAccountNo(Long.valueOf(num3));
+            shortLinkDO.setSign(CommonUtil.MD5(originalUrl));
+            shortLinkDO.setDel(0);
+
+            shortLinkManager.addShortLink(shortLinkDO);
+
+        }
+
+
+    }
+
+    @Test
+    public void testFind(){
+
+        ShortLinkDO shortLinCode = shortLinkManager.findByShortLinCode("04DzCFLa");
+        log.info(shortLinCode.toString());
+
     }
 
 }
