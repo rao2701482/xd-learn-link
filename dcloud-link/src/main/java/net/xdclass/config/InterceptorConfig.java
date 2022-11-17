@@ -10,11 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()) //添加拦截的路径
-                .addPathPatterns("/api/link/*/**", "/api/group/*/**","/api/domain/*/**")
-                //排除不拦截
-                .excludePathPatterns("");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new LoginInterceptor()) //添加拦截的路径
+//                .addPathPatterns("/api/link/*/**", "/api/group/*/**","/api/domain/*/**")
+//                //排除不拦截
+//                .excludePathPatterns("");
+//    }
 }
