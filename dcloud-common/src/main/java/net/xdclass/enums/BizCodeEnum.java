@@ -105,7 +105,7 @@ public enum BizCodeEnum {
     /**
      * MQ消费异常
      */
-    MQ_CONSUME_EXCEPTION(900101,"数据库找不到");
+    MQ_CONSUME_EXCEPTION(900101,"消费者消费异常");
 
     @Getter
     private String message;
