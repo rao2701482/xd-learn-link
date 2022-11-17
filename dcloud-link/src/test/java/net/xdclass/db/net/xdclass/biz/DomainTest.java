@@ -35,7 +35,7 @@ public class DomainTest {
 
         List<DomainDO> domainDOS = domainManager.listOfficialDomain();
 
-        log.info(domainDOS.toString());
+        log.info("1:  " + domainDOS.toString());
 
     }
 
