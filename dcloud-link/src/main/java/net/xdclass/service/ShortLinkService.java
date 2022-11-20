@@ -1,6 +1,7 @@
 package net.xdclass.service;
 
 import net.xdclass.controller.request.ShortLinkAddRequest;
+import net.xdclass.model.EventMessage;
 import net.xdclass.util.JsonData;
 import net.xdclass.vo.ShortLinkVO;
 
@@ -28,4 +29,10 @@ public interface ShortLinkService {
      * @return
      */
     JsonData createShortLink(ShortLinkAddRequest request);
+    /**
+     * 处理新增短链消息
+     * @param eventMessage
+     * @return
+     */
+    boolean handlerAddShortLink(EventMessage eventMessage);
 }

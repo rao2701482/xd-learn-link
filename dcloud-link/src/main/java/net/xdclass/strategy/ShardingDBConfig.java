@@ -34,8 +34,12 @@ public class ShardingDBConfig {
      * 获取随机的前缀
      * @return
      */
-    public static String getRandomDBPrefix(){
-        int index = random.nextInt(dbPrefixList.size());
+    public static String getRandomDBPrefix(String code){
+        int hashCode = code.hashCode();
+
+        int index = Math.abs(hashCode) % dbPrefixList.size();
+
+//        int index = random.nextInt(dbPrefixList.size());
         return dbPrefixList.get(index);
     }
 

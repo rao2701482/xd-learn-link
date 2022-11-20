@@ -33,8 +33,11 @@ public class ShardingTableConfig {
      * 获取随机的后缀
      * @return
      */
-    public static String getRandomTableSuffix(){
-        int index = random.nextInt(tableSuffixList.size());
+    public static String getRandomTableSuffix(String code){
+        int hashCode = code.hashCode();
+
+        int index = Math.abs(hashCode) % tableSuffixList.size();
+//        int index = random.nextInt(tableSuffixList.size());
         return tableSuffixList.get(index);
     }
 

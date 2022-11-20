@@ -3,12 +3,15 @@ package net.xdclass.listener;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.enums.BizCodeEnum;
+import net.xdclass.enums.EventMessageType;
 import net.xdclass.exception.BizException;
 import net.xdclass.model.EventMessage;
+import net.xdclass.service.ShortLinkService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -28,7 +31,8 @@ import java.io.IOException;
 @RabbitListener(queuesToDeclare = { @Queue("short_link.add.mapping.queue") })
 public class ShortLinkAddMappingMQListener {
 
-
+    @Autowired
+    private ShortLinkService shortLinkService;
 
     @RabbitHandler
     public void shortLinkHandler(EventMessage eventMessage, Message message, Channel channel) throws IOException {
@@ -36,8 +40,8 @@ public class ShortLinkAddMappingMQListener {
         long tag = message.getMessageProperties().getDeliveryTag();
         try{
 
-            //TODO 处理业务逻辑
-            int i = 1 / 0;
+            eventMessage.setEventMessageType(EventMessageType.SHORT_LINK_ADD_MAPPING.name());
+            shortLinkService.handlerAddShortLink(eventMessage);
 
         }catch (Exception e){
 

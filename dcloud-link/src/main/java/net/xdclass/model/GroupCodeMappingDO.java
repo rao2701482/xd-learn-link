@@ -1,8 +1,7 @@
 package net.xdclass.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +17,9 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("group_code_mapping")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupCodeMappingDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
