@@ -86,6 +86,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     public JsonData createShortLink(ShortLinkAddRequest request) {
 
         Long accountNo = LoginInterceptor.threadLocal.get().getAccountNo();
+//        Long accountNo = 1L;
 
         String newOriginalUrl = CommonUtil.addUrlPrefix(request.getOriginalUrl());
         request.setOriginalUrl(newOriginalUrl);

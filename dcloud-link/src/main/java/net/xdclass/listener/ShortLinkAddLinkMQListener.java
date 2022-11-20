@@ -52,7 +52,7 @@ public class ShortLinkAddLinkMQListener {
         }
         log.info("消费成功:{}",eventMessage);
         //确认消息消费成功
-        channel.basicAck(tag,false);
+//        channel.basicAck(tag,false);
 
     }
 
