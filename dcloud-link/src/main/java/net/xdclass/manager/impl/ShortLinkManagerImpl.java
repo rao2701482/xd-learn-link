@@ -1,6 +1,7 @@
 package net.xdclass.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.manager.ShortLinkManager;
 import net.xdclass.mapper.ShortLinkMapper;
@@ -38,13 +39,29 @@ public class ShortLinkManagerImpl implements ShortLinkManager {
     }
 
     @Override
-    public int del(String shortLinkCode, Long accountNo) {
+    public int del(ShortLinkDO shortLinkDO) {
 
-        ShortLinkDO shortLinkDO = new ShortLinkDO();
-        shortLinkDO.setDel(1);
 
-        int rows = shortLinkMapper.update(shortLinkDO,
-                new QueryWrapper<ShortLinkDO>().eq("code", shortLinkCode).eq("account_no", accountNo));
+        int rows = shortLinkMapper.update(null,
+                new UpdateWrapper<ShortLinkDO>()
+                        .eq("code", shortLinkDO.getCode())
+                        .eq("account_no", shortLinkDO.getAccountNo())
+                        .set("del",1));
+        return rows;
+    }
+
+    @Override
+    public int update(ShortLinkDO shortLinkDO) {
+
+        int rows = shortLinkMapper.update(null, new UpdateWrapper<ShortLinkDO>()
+                .eq("code", shortLinkDO.getCode())
+                .eq("del", 0)
+                .eq("account_no",shortLinkDO.getAccountNo())
+
+                .set("title", shortLinkDO.getTitle())
+                .set("domain", shortLinkDO.getDomain()));
+
+
         return rows;
     }
 }

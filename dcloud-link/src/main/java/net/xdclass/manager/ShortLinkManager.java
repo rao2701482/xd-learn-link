@@ -1,5 +1,6 @@
 package net.xdclass.manager;
 
+import net.xdclass.model.GroupCodeMappingDO;
 import net.xdclass.model.ShortLinkDO;
 
 public interface ShortLinkManager {
@@ -22,10 +23,16 @@ public interface ShortLinkManager {
 
     /**
      * 删除
-     * @param shortLinkCode
-     * @param accountNo
+     * @param shortLinkDO
      * @return
      */
-    int del(String shortLinkCode,Long accountNo);
+    int del(ShortLinkDO shortLinkDO);
+
+    /**
+     * 更新
+     * @param shortLinkDO
+     * @return
+     */
+    int update(ShortLinkDO shortLinkDO);
 
 }
