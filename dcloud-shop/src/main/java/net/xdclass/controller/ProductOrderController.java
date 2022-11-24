@@ -2,19 +2,25 @@ package net.xdclass.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
+import net.xdclass.annotation.RepeatSubmit;
+import net.xdclass.constant.RedisKey;
 import net.xdclass.controller.request.ConfirmOrderRequest;
+import net.xdclass.controller.request.ProductOrderPageRequest;
 import net.xdclass.enums.BizCodeEnum;
 import net.xdclass.enums.ClientTypeEnum;
 import net.xdclass.enums.ProductOrderPayTypeEnum;
+import net.xdclass.interceptor.LoginInterceptor;
 import net.xdclass.service.ProductOrderService;
 import net.xdclass.util.CommonUtil;
 import net.xdclass.util.JsonData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -26,26 +32,46 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/productOrderDO")
+@RequestMapping("/api/order/v1")
 public class ProductOrderController {
 
     @Autowired
     private ProductOrderService productOrderService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    /**
+     * 下单前获取令牌用于防重提交
+     * @return
+     */
+    @GetMapping("token")
+    public JsonData getOrderToken(){
+
+        long accountNo = LoginInterceptor.threadLocal.get().getAccountNo();
+
+        String token = CommonUtil.getStringNumRandom(32);
+
+        String key = String.format(RedisKey.SUBMIT_ORDER_TOKEN_KEY,accountNo,token);
+
+        //令牌有效时间是30分钟
+        redisTemplate.opsForValue().set(key, String.valueOf(Thread.currentThread().getId()),30, TimeUnit.MINUTES);
+
+        return JsonData.buildSuccess(token);
+    }
 
     /**
      * 分页接口
      *
      * @return
      */
-    @GetMapping("page")
+    @PostMapping("page")
+//    @RepeatSubmit(limitType = RepeatSubmit.Type.PARAM)
     public JsonData page(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "state", required = false) String state
+            @RequestBody ProductOrderPageRequest orderPageRequest
     ) {
 
-        Map<String, Object> pageResult = productOrderService.page(page, size, state);
+        Map<String, Object> pageResult = productOrderService.page(orderPageRequest);
         return JsonData.buildSuccess(pageResult);
     }
 
@@ -73,6 +99,7 @@ public class ProductOrderController {
      * @param response
      */
     @PostMapping("confirm")
+//    @RepeatSubmit(limitType = RepeatSubmit.Type.TOKEN)
     public void confirmOrder(@RequestBody ConfirmOrderRequest orderRequest, HttpServletResponse response) {
 
         // 重要

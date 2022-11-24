@@ -3,6 +3,7 @@ package net.xdclass.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.constant.TimeConstant;
 import net.xdclass.controller.request.ConfirmOrderRequest;
+import net.xdclass.controller.request.ProductOrderPageRequest;
 import net.xdclass.enums.BillTypeEnum;
 import net.xdclass.enums.BizCodeEnum;
 import net.xdclass.enums.ProductOrderPayTypeEnum;
@@ -48,11 +49,11 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     private ProductManager productManager;
 
     @Override
-    public Map<String, Object> page(int page, int size, String state) {
+    public Map<String, Object> page(ProductOrderPageRequest orderPageRequest) {
 
         Long accountNo = LoginInterceptor.threadLocal.get().getAccountNo();
 
-        Map<String, Object> pageResult  = productOrderManager.page(page, size, accountNo, state);
+        Map<String, Object> pageResult  = productOrderManager.page(orderPageRequest.getPage(), orderPageRequest.getSize(), accountNo, orderPageRequest.getState());
         return pageResult;
     }
 
