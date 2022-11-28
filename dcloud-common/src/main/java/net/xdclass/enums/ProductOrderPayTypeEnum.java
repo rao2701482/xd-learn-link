@@ -2,7 +2,7 @@ package net.xdclass.enums;
 
 public enum ProductOrderPayTypeEnum {
 
-    WECHAT_APY,
+    WECHAT_PAY,
 
     ALI_PAY,
 

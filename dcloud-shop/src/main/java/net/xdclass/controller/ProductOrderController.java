@@ -2,7 +2,6 @@ package net.xdclass.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
-import net.xdclass.annotation.RepeatSubmit;
 import net.xdclass.constant.RedisKey;
 import net.xdclass.controller.request.ConfirmOrderRequest;
 import net.xdclass.controller.request.ProductOrderPageRequest;
@@ -126,7 +125,7 @@ public class ProductOrderController {
 
                 }
 
-            } else if (payType.equalsIgnoreCase(ProductOrderPayTypeEnum.WECHAT_APY.name())) {
+            } else if (payType.equalsIgnoreCase(ProductOrderPayTypeEnum.WECHAT_PAY.name())) {
                 //微信支付
                 CommonUtil.sendJsonMessage(response, jsonData);
             }
