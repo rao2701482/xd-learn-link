@@ -1,4 +1,4 @@
-package net.xdclass;
+package net.xdclass.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.annotation.RepeatSubmit;

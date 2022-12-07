@@ -1,6 +1,7 @@
 package net.xdclass.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import net.xdclass.component.PayFactory;
 import net.xdclass.config.RabbitMQConfig;
 import net.xdclass.constant.TimeConstant;
 import net.xdclass.controller.request.ConfirmOrderRequest;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,6 +55,9 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private RabbitMQConfig rabbitMQConfig;
+
+    @Autowired
+    private PayFactory payFactory;
 
 
     @Override
@@ -123,9 +128,16 @@ public class ProductOrderServiceImpl implements ProductOrderService {
                 .build();
         rabbitTemplate.convertAndSend(rabbitMQConfig.getOrderEventExchange(), rabbitMQConfig.getOrderCloseDelayRoutingKey(), eventMessage);
 
-        //调用支付信息 TODO
+        //调用支付信息
+        String codeUrl = payFactory.pay(payInfoVO);
+        if(StringUtils.isNotBlank(codeUrl)){
+            Map<String,String> resultMap = new HashMap<>(2);
+            resultMap.put("code_url",codeUrl);
+            resultMap.put("out_trade_no",payInfoVO.getOutTradeNo());
+            return JsonData.buildSuccess(resultMap);
+        }
 
-        return JsonData.buildSuccess();
+        return JsonData.buildResult(BizCodeEnum.PAY_ORDER_FAIL);
     }
 
     /**
