@@ -2,6 +2,7 @@ package net.xdclass.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.xdclass.enums.ShortLinkStateEnum;
+import net.xdclass.service.LogService;
 import net.xdclass.service.ShortLinkService;
 import net.xdclass.util.CommonUtil;
 import net.xdclass.vo.ShortLinkVO;
@@ -29,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class LinkApiController {
 
+    @Autowired
+    private LogService logService;
 
     @Autowired
     private ShortLinkService shortLinkService;
@@ -61,6 +64,12 @@ public class LinkApiController {
             if (isLetterDigit(shortLinkCode)) {
                 //查找短链
                 ShortLinkVO shortLinkVO = shortLinkService.parseShortLinkCode(shortLinkCode);
+
+                if(shortLinkVO!=null){
+                    logService.recordShortLinkLog(request,shortLinkCode,shortLinkVO.getAccountNo());
+                }
+
+
                 //判断是否过期和可用
                 if (isVisitable(shortLinkVO)) {
 
