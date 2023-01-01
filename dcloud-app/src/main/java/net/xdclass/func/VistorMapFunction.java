@@ -12,6 +12,8 @@ import org.apache.flink.configuration.Configuration;
 /**
  * 小滴课堂,愿景：让技术不再难学
  *
+ * => richMap: map映射: 1对多
+ *
  * @Description
  * @Author 二当家小D
  * @Remark 有问题直接联系我，源码-笔记-技术交流群
