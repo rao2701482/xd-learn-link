@@ -2,6 +2,7 @@ package net.xdclass.dwm;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.xdclass.func.AsyncLocationRequestFunction;
 import net.xdclass.func.DeviceMapFunction;
 import net.xdclass.func.LocationMapFunction;
 import net.xdclass.model.DeviceInfoDO;
@@ -9,6 +10,7 @@ import net.xdclass.model.ShortLinkWideDO;
 import net.xdclass.util.DeviceUtil;
 import net.xdclass.util.KafkaUtil;
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -16,6 +18,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.util.Collector;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 小滴课堂,愿景：让技术不再难学
@@ -66,7 +70,9 @@ public class DwmShortLinWideApp {
 
 
         //3、补齐地理位置信息
-        SingleOutputStreamOperator<String> shortLinkWideDS  = deviceWideDS.map(new LocationMapFunction());
+//        SingleOutputStreamOperator<String> shortLinkWideDS  = deviceWideDS.map(new LocationMapFunction());
+        SingleOutputStreamOperator<String> shortLinkWideDS = AsyncDataStream.unorderedWait(deviceWideDS, new AsyncLocationRequestFunction(), 1000, TimeUnit.MILLISECONDS, 200);
+
         shortLinkWideDS.print("地理位置信息宽表补齐");
 
         FlinkKafkaProducer<String> kafkaProducer = KafkaUtil.getKafkaProducer(SINK_TOPIC);
