@@ -51,7 +51,7 @@ public class AsyncLocationRequestFunction extends RichAsyncFunction<ShortLinkWid
     @Override
     public void timeout(ShortLinkWideDO input, ResultFuture<String> resultFuture) throws Exception {
 
-        resultFuture.complete(null);
+        resultFuture.complete(Collections.singleton(null));
     }
 
 
@@ -104,7 +104,9 @@ public class AsyncLocationRequestFunction extends RichAsyncFunction<ShortLinkWid
                 } catch (InterruptedException | ExecutionException | IOException e) {
                     log.error("ip解析错误,value={},msg={}", shortLinkWideDO, e.getMessage());
                 }
-                return null;
+                shortLinkWideDO.setProvince("-");
+                shortLinkWideDO.setCity("-");
+                return shortLinkWideDO;
             }
         });
 

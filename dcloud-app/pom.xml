@@ -159,8 +159,24 @@
             <version>4.1.5</version>
         </dependency>
 
-    </dependencies>
+        <!--引入clickhouse依赖，排查版本影响-->
+        <dependency>
+            <groupId>ru.yandex.clickhouse</groupId>
+            <artifactId>clickhouse-jdbc</artifactId>
+            <version>0.2.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
+    </dependencies>
 
     <!-- 指定仓库位置，先从aliyun找，找不到再从apache仓库找 -->
     <repositories>
@@ -175,11 +191,10 @@
     </repositories>
 
 
-        <build>
-            <finalName>xdclass-flink</finalName>
-            <plugins>
-
-                <!--默认编译版本比较低，所以用compiler插件,指定项目源码的jdk版本，编译后的jdk版本和编码,-->
+    <build>
+        <finalName>xdclass-flink</finalName>
+        <plugins>
+            <!--默认编译版本比较低，所以用compiler插件,指定项目源码的jdk版本，编译后的jdk版本和编码,-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
