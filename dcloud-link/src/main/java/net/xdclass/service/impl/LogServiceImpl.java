@@ -5,14 +5,14 @@ import net.xdclass.enums.LogTypeEnum;
 import net.xdclass.model.LogRecord;
 import net.xdclass.service.LogService;
 import net.xdclass.util.CommonUtil;
+import net.xdclass.util.JsonData;
 import net.xdclass.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 小滴课堂,愿景：让技术不再难学
@@ -35,12 +35,30 @@ public class LogServiceImpl implements LogService {
     private KafkaTemplate kafkaTemplate;
 
 
+    /**
+     * ==========用于测试==========
+     */
+    private static List<String> ipList = new ArrayList<>();
+    static {
+        //深圳
+        ipList.add("14.197.9.110");
+        //广州
+        ipList.add("113.68.152.139");
+    }
+
+    private static List<String> refererList = new ArrayList<>();
+    static {
+        refererList.add("https://taobao.com");
+        refererList.add("https://douyin.com");
+    }
+    private Random random = new Random();
 
     @Override
     public void recordShortLinkLog(HttpServletRequest request, String shortLinkCode, Long accountNo) {
 
         //ip、浏览器信息
-        String ip = CommonUtil.getIpAddr(request);
+        //String ip = CommonUtil.getIpAddr(request);
+        String ip = ipList.get(random.nextInt(ipList.size()));
 
         //全部请求头
         Map<String,String> headerMap = CommonUtil.getAllRequestHeader(request);
@@ -48,7 +66,9 @@ public class LogServiceImpl implements LogService {
 
         Map<String,String> availableMap = new HashMap<>();
         availableMap.put("user-agent",headerMap.get("user-agent"));
-        availableMap.put("referer",headerMap.get("referer"));
+        //availableMap.put("referer",headerMap.get("referer"));
+        availableMap.put("referer",refererList.get(random.nextInt(refererList.size())));
+
         availableMap.put("accountNo",accountNo.toString());
 
         LogRecord logRecord = LogRecord.builder()
