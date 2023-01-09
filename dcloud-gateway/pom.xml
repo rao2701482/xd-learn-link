@@ -21,7 +21,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
-            <version>3.0.6</version>
         </dependency>
 
         <!-- Spring Cloud 2020 中重磅推荐的负载均衡器 Spring Cloud LoadBalancer 简称 SCL-->
@@ -74,15 +73,5 @@
 
 
     </dependencies>
-
-
-    <!-- 代码库 -->
-    <repositories>
-
-        <repository>
-            <id>repo1</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 
 </project>

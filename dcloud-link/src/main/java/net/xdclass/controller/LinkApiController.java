@@ -79,6 +79,7 @@ public class LinkApiController {
 
                     //302跳转
                     response.setStatus(HttpStatus.FOUND.value());
+//                    response.sendRedirect("http://baidu.com");
 
 
                 } else {
