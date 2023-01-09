@@ -30,7 +30,7 @@
         <alibaba.cloud.version>2021.1</alibaba.cloud.version>
 
         <mybatisplus.boot.starter.version>3.4.0</mybatisplus.boot.starter.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.22</lombok.version>
         <commons.lang3.version>3.9</commons.lang3.version>
         <commons.codec.version>1.15</commons.codec.version>
 
@@ -49,6 +49,7 @@
 
         <!--跳过单元测试-->
         <skipTests>true</skipTests>
+        <!-- 全局配置 -->
         <docker.image.prefix>dcloud</docker.image.prefix>
 
     </properties>
